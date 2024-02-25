@@ -5,9 +5,16 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
+import LayersIcon from "@mui/icons-material/Layers";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { mainListItems, secondaryListItems } from "../../Components/ListItems";
+import { useNavigate } from "react-router";
 
 const drawerWidth: number = 240;
 
@@ -40,6 +47,7 @@ const Drawer = styled(MuiDrawer, {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 const SideBaar = ({ open, toggleDrawer }: any) => {
+  const navigate = useNavigate();
   return (
     <Drawer variant="permanent" open={open}>
       <Toolbar
@@ -55,10 +63,34 @@ const SideBaar = ({ open, toggleDrawer }: any) => {
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav">
-        {mainListItems}
+      <List sx={{height:'100vh'}}>
+        <>
+          <ListItemButton onClick={()=>navigate('/')}>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+
+          <ListItemButton onClick={()=>navigate('/')}>
+            <ListItemIcon>
+              <LayersIcon />
+            </ListItemIcon>
+            <ListItemText primary="Second List" />
+          </ListItemButton>
+        </>
         <Divider sx={{ my: 1 }} />
-        {secondaryListItems}
+        <>
+          <ListSubheader component="div" inset>
+            Sample Data Charts
+          </ListSubheader>
+          <ListItemButton onClick={()=>navigate('charts')}>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Graph" />
+          </ListItemButton>
+        </>
       </List>
     </Drawer>
   );

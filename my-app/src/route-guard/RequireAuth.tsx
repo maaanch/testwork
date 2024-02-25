@@ -18,13 +18,14 @@ const RequireAuth = ({ allowedRoles }: { allowedRoles: any }) => {
   const navigate = useNavigate();
   const token = getaccessToken();
 
-  useEffect(() => {
-    if (!token) {
-      navigate("signin", { replace: true });
-    }
-  }, [token, navigate]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate("signin", { replace: true });
+  //   }
+  // }, [token, navigate]);
 
-  return <>{token && <Outlet />}</>;
+  // return <>{token && <Outlet />}</>;
+  return <Outlet />;
 };
 
 RequireAuth.propTypes = {

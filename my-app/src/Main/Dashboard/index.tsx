@@ -15,7 +15,7 @@ export default function Dashboard() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
+ console.log('dashboard')
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
