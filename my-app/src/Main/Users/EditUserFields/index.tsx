@@ -1,6 +1,5 @@
 import {
   Alert,
-  Autocomplete,
   Box,
   Button,
   Container,
@@ -13,35 +12,30 @@ import {
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useTheme } from "@mui/material/styles";
 import CircularLoader from "../../Components/CircularLoader";
-
-const allroles = [
-  { id: 1, label: "Super Admin", value: 1234 },
-  { id: 2, label: "Admin", value: 4567 },
-  { id: 3, label: "Standar User", value: 7890 },
-];
+import { useMutation } from "@apollo/client";
+import { ADD_USER, UPDATE_USER } from "../../../store/mutations/userMutations";
+import { GET_USERS } from "../../../store/queries/userQueries";
 
 const AddButtonFields = ({ setOpen, props }: any) => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [openSnackbar, setOpenSnakbar] = useState(false);
   const [load, setLoad] = useState(false);
-  const theme = useTheme();
-  console.log(props);
+  console.log("props", props);
 
-  const defaultRole = allroles.find((item) => item.value === props.data.role);
-  console.log(defaultRole);
+  const [updateClient, { loading, error }] = useMutation(UPDATE_USER, {
+    refetchQueries: [{ query: GET_USERS }],
+  });
+  if (loading) return <CircularLoader />;
   return (
     <>
       {load && <CircularLoader />}
       <Formik
         initialValues={{
-          fullName: props.data.name,
-          email: props.data.email, // 'admin@silverstay.com',
-          designation: props.data.designation,
-          role: props.data.role,
-          submit: null,
+          fullName: props?.data?.name,
+          email: props?.data?.email, // 'admin@silverstay.com',
+          phone: props?.data?.phone, // 'admin@silverstay.com',
         }}
         validationSchema={Yup.object().shape({
           fullName: Yup.string()
@@ -51,11 +45,31 @@ const AddButtonFields = ({ setOpen, props }: any) => {
             .email("Must be a valid email")
             .max(255, "Email must be at most 255 characters")
             .required("Email is required"),
-          designation: Yup.string().required("Designation is required"),
-          role: Yup.number().required("Role is required"),
+          phone: Yup.number().required("phone is required"),
         })}
-        onSubmit={() => {
-          console.log("");
+        onSubmit={(values) => {
+          setLoad(true);
+          updateClient({
+            variables: {
+              id: props?.data?.id,
+              name: values.fullName,
+              email: values.email,
+              phone: values.phone,
+            },
+          })
+            .then(() => {
+              setShowSuccess(true);
+              setLoad(false);
+              setOpenSnakbar(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 2000);
+            })
+            .catch((rejectedValueOrSerializedError: any) => {
+              console.log("error ocured here");
+              setLoad(false);
+              setOpenSnakbar(true);
+            });
         }}
         // onSubmit={(values) => {
         //   setLoad(true);
@@ -143,30 +157,28 @@ const AddButtonFields = ({ setOpen, props }: any) => {
                   </FormHelperText>
                 )}
               </FormControl>
-
               <FormControl fullWidth sx={{ mb: 4 }}>
-                <Autocomplete
-                  fullWidth
-                  // value={values.r}
-                  defaultValue={defaultRole}
+                <TextField
+                  error={Boolean(touched.phone && errors.phone)}
+                  variant="standard"
+                  id="outlined-adornment-phone-add"
+                  type="text"
+                  value={values.phone}
+                  name="phone"
                   onBlur={handleBlur}
-                  onChange={(e, newval: any) =>
-                    setFieldValue("role", newval.value)
-                  }
-                  disablePortal
-                  options={allroles}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      error={Boolean(touched.role && errors.role)}
-                      variant="standard"
-                      label="Role"
-                    />
-                  )}
+                  onChange={handleChange}
+                  label="phone"
+                  inputProps={{}}
+                  fullWidth
                 />
+                {touched.phone && errors.phone && (
+                  <FormHelperText
+                    error
+                    id="standard-weight-helper-text-phone-add"
+                  >
+                    {errors?.phone?.toString()}
+                  </FormHelperText>
+                )}
               </FormControl>
               <Snackbar
                 open={openSnackbar}

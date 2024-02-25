@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import {
   Alert,
   Autocomplete,
@@ -16,18 +17,19 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
 import CircularLoader from "../../Components/CircularLoader";
-const allroles = [
-  { id: 1, label: "Super Admin", value: 1234 },
-  { id: 2, label: "Admin", value: 4567 },
-  { id: 3, label: "Standar User", value: 7890 },
-];
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../../../store/mutations/userMutations";
+import { GET_USERS } from "../../../store/queries/userQueries";
 
 const AddButtonFields = ({ setOpen }: any) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [openSnackbar, setOpenSnakbar] = useState(false);
   const [load, setLoad] = useState(false);
-  const theme = useTheme();
 
+  const [addClient, { loading, error }] = useMutation(ADD_USER, {
+    refetchQueries: [{ query: GET_USERS }],
+  });
+  if (loading) return <CircularLoader />;
   return (
     <>
       {load && <CircularLoader />}
@@ -35,10 +37,7 @@ const AddButtonFields = ({ setOpen }: any) => {
         initialValues={{
           fullName: "",
           email: "", // 'admin@silverstay.com',
-          registraionId: "", // password: 'admin!@#',
-          designation: "",
-          role: 7890,
-          submit: null,
+          phone: "", // password: 'admin!@#',
         }}
         validationSchema={Yup.object().shape({
           fullName: Yup.string()
@@ -48,38 +47,31 @@ const AddButtonFields = ({ setOpen }: any) => {
             .email("Must be a valid email")
             .max(255, "Email must be at most 255 characters")
             .required("Email is required"),
-          registraionId: Yup.number().required("RegistraionId is required"),
-          designation: Yup.string().required("Designation is required"),
-          role: Yup.number().required("Role is required"),
+          phone: Yup.number().required("phone is required"),
         })}
-        onSubmit={() => console.log("")}
-        // onSubmit={(values) => {
-        //   setLoad(true);
-        //   dispatch(
-        //     addNewEmployee({
-        //       name: values.fullName,
-        //       designation: values.designation,
-        //       email: values.email,
-        //       deviceId: Number(values.registraionId),
-        //       role: values.role,
-        //     })
-        //   )
-        //     .unwrap()
-        //     .then(() => {
-        //       setShowSuccess(true);
-        //       setLoad(false);
-        //       setOpenSnakbar(true);
-        //       //  forgetPassword(values.email)
-        //       setTimeout(() => {
-        //         setOpen(false);
-        //       }, 900);
-        //     })
-        //     .catch((rejectedValueOrSerializedError: any) => {
-        //       console.log("error ocured here");
-        //       setLoad(false);
-        //       setOpenSnakbar(true);
-        //     });
-        // }}
+        onSubmit={(values) => {
+          setLoad(true);
+          addClient({
+            variables: {
+              name: values.fullName,
+              email: values.email,
+              phone: values.phone,
+            },
+          })
+            .then(() => {
+              setShowSuccess(true);
+              setLoad(false);
+              setOpenSnakbar(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 2000);
+            })
+            .catch((rejectedValueOrSerializedError: any) => {
+              console.log("error ocured here");
+              setLoad(false);
+              setOpenSnakbar(true);
+            });
+        }}
       >
         {({
           errors,
@@ -116,7 +108,7 @@ const AddButtonFields = ({ setOpen }: any) => {
                     error
                     id="standard-weight-helper-text-fullName-add"
                   >
-                    {errors.fullName}
+                    {errors.fullName.toString()}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -137,57 +129,34 @@ const AddButtonFields = ({ setOpen }: any) => {
                     error
                     id="standard-weight-helper-text-email-add"
                   >
-                    {errors.email}
+                    {errors?.fullName?.toString()}
                   </FormHelperText>
                 )}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <TextField
-                  error={Boolean(touched.registraionId && errors.registraionId)}
+                  error={Boolean(touched.phone && errors.phone)}
                   variant="standard"
-                  id="outlined-adornment-registraionId-add"
+                  id="outlined-adornment-phone-add"
                   type="text"
-                  value={values.registraionId}
-                  name="registraionId"
+                  value={values.phone}
+                  name="phone"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  label="RegistraionId"
+                  label="phone"
                   inputProps={{}}
                   fullWidth
                 />
-                {touched.registraionId && errors.registraionId && (
+                {touched.phone && errors.phone && (
                   <FormHelperText
                     error
-                    id="standard-weight-helper-text-registraionId-add"
+                    id="standard-weight-helper-text-phone-add"
                   >
-                    {errors.registraionId}
+                    {errors?.phone?.toString()}
                   </FormHelperText>
                 )}
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 4 }}>
-                <Autocomplete
-                  fullWidth
-                  onBlur={handleBlur}
-                  onChange={(e, newval: any) =>
-                    setFieldValue("role", newval.value)
-                  }
-                  disablePortal
-                  options={allroles}
-                  defaultValue={{ id: 3, label: "Standar User", value: 7890 }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      error={Boolean(touched.role && errors.role)}
-                      variant="standard"
-                      label="Role"
-                    />
-                  )}
-                />
-              </FormControl>
               <Snackbar
                 open={openSnackbar}
                 autoHideDuration={1500}
@@ -200,8 +169,8 @@ const AddButtonFields = ({ setOpen }: any) => {
                   sx={{ width: "100%" }}
                 >
                   {showSuccess
-                    ? "Employee added , Password inivitaion link has sent successfully"
-                    : "Employee Cannot be added"}
+                    ? "User added , Password inivitaion link has sent successfully"
+                    : "User Cannot be added"}
                 </Alert>
               </Snackbar>
 

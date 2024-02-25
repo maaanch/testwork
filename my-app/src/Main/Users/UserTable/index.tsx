@@ -13,14 +13,15 @@ import AddButton from "../AddButton";
 import Title from "../../Components/Title";
 import UserRow from "../UserRow";
 import { Height } from "@mui/icons-material";
+import { useQuery } from "@apollo/client";
+import { GET_USERS } from "../../../store/queries/userQueries";
+import CircularLoader from "../../Components/CircularLoader";
 
 export default function UserTable() {
-  // const employess = useSelector(selectEmployeeIds);
-  // const employeeStatus = useSelector(getEmployeeStatus);
-  // console.log(employess)
-  useEffect(() => {
-    // dispatch(fetchAllEmployees({}));
-  }, []);
+  const { loading, error, data } = useQuery(GET_USERS);
+
+  if (loading) return <CircularLoader />;
+  if (error) return <p>Something Went Wrong</p>;
 
   return (
     <>
@@ -43,7 +44,7 @@ export default function UserTable() {
                   {/* <TableCell>DeviceId</TableCell> */}
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>CreatedAt</TableCell>
+                  <TableCell>Phone</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -53,7 +54,9 @@ export default function UserTable() {
                   {/* {employess.map((item) => (
                         <UserRow id={item} key={item} />
                       ))} */}
-                  <UserRow />
+                  {data?.clients?.map((client: any) => (
+                    <UserRow key={client.id} client={client} />
+                  ))}
                 </>
               </TableBody>
             </Table>

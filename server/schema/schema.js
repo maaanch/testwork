@@ -88,6 +88,30 @@ const mutation = new GraphQLObjectType({
         return client.save();
       },
     },
+
+    //update client
+    updateClient: {
+      type: ClientType,
+      args: {
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        phone: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        // Find the client by ID
+        return Client.findByIdAndUpdate(
+          args.id,
+          {
+            name: args.name,
+            email: args.email,
+            phone: args.phone,
+          },
+          { new: true }
+        ); // { new: true } returns the updated document
+      },
+    },
+
     // Delete a client
     deleteClient: {
       type: ClientType,
