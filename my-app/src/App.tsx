@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
+import Dashboard from "./Main/Dashboard";
 
 function App() {
   return (
-    < >
-      <h1>React app</h1>
+    <>
+      <Dashboard />
     </>
   );
 }
