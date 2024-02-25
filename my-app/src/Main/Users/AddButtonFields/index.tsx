@@ -15,8 +15,6 @@ import { Formik } from "formik";
 
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
-import { addNewEmployee } from "../../../store/Users/userSlice";
 import CircularLoader from "../../Components/CircularLoader";
 const allroles = [
   { id: 1, label: "Super Admin", value: 1234 },
@@ -28,7 +26,6 @@ const AddButtonFields = ({ setOpen }: any) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [openSnackbar, setOpenSnakbar] = useState(false);
   const [load, setLoad] = useState(false);
-  const dispatch = useDispatch();
   const theme = useTheme();
 
   return (

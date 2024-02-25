@@ -11,20 +11,13 @@ import {
 import React, { useEffect } from "react";
 import AddButton from "../AddButton";
 import Title from "../../Components/Title";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllEmployees,
-  getEmployeeStatus,
-  selectEmployeeIds,
-} from "../../../store/Users/userSlice";
 import UserRow from "../UserRow";
-import CircularLoader from "../../Components/CircularLoader";
+import { Height } from "@mui/icons-material";
 
-export default function Employees() {
+export default function UserTable() {
   // const employess = useSelector(selectEmployeeIds);
   // const employeeStatus = useSelector(getEmployeeStatus);
   // console.log(employess)
-  const dispatch = useDispatch();
   useEffect(() => {
     // dispatch(fetchAllEmployees({}));
   }, []);
@@ -36,20 +29,20 @@ export default function Employees() {
         sx={{
           mt: 10,
           mb: 4,
+          height: "50vh",
           boxShadow:
             "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
         }}
       >
         <Paper sx={{ p: 2 }}>
-          <Title>Employees</Title>
+          <Title>Users</Title>
           <TableContainer sx={{ maxHeight: 560 }}>
             <Table size="small">
               <TableHead>
                 <TableRow hover>
-                  <TableCell>DeviceId</TableCell>
+                  {/* <TableCell>DeviceId</TableCell> */}
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Desgination</TableCell>
                   <TableCell>CreatedAt</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
@@ -58,8 +51,9 @@ export default function Employees() {
               <TableBody>
                 <>
                   {/* {employess.map((item) => (
-                        <EmployeRow id={item} key={item} />
+                        <UserRow id={item} key={item} />
                       ))} */}
+                  <UserRow />
                 </>
               </TableBody>
             </Table>

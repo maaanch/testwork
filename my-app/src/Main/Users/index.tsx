@@ -8,6 +8,7 @@ import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import UserTable from "./UserTable";
 
 const Users = () => {
   function Copyright(props: any) {
@@ -20,7 +21,7 @@ const Users = () => {
       >
         {"Copyright © "}
         <Link color="inherit" href="https://mui.com/">
-          UserManagments System 
+          UserManagments System
         </Link>{" "}
         {new Date().getFullYear()}
       </Typography>
@@ -42,15 +43,15 @@ const Users = () => {
       <Toolbar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
-         
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-              <Orders />
+              {/* <Orders /> */}
+              <UserTable />
             </Paper>
           </Grid>
         </Grid>
       </Container>
-        <Copyright sx={{ pt: 4 ,}} />
+      <Copyright sx={{ pt: 4 }} />
     </Box>
   );
 };

@@ -7,15 +7,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
-import { deleteEmployee } from "../../../store/Users/userSlice";
-import { useDispatch } from "react-redux";
 
 export default function DeletUser(props: any) {
   const [open, setOpen] = React.useState(false);
   const [showSuccess, setShowSuccess] = React.useState(false);
   const [openSnackbar, setOpenSnakbar] = React.useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const handleDelete = () => {
     return 0;
   };

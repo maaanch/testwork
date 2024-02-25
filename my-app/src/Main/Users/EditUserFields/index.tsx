@@ -14,8 +14,6 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
-import { updateEmployee } from "../../../store/Users/userSlice";
 import CircularLoader from "../../Components/CircularLoader";
 
 const allroles = [
@@ -29,11 +27,10 @@ const AddButtonFields = ({ setOpen, props }: any) => {
 
   const [openSnackbar, setOpenSnakbar] = useState(false);
   const [load, setLoad] = useState(false);
-  const dispatch = useDispatch();
   const theme = useTheme();
   console.log(props);
 
-  const defaultRole = allroles.find((item) => item.value == props.data.role);
+  const defaultRole = allroles.find((item) => item.value === props.data.role);
   console.log(defaultRole);
   return (
     <>
